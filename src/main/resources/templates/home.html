@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Course Managment System</title>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Home - Course Managment System</h1>
+
+        <br><br>
+
+        <h2>Table of Students</h2>
+        <table class="table table-bordered table-striped">
+
+            <thead class="thead-dark">
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Gender</th>
+                    <th>Email</th>
+                    <th>Date of birth</th>
+                    <th>Country of birth</th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="tempStudent : ${students}">
+                    <td th:text="${tempStudent.firstName}" />
+                    <td th:text="${tempStudent.lastName}" />
+                    <td th:text="${tempStudent.gender}" />
+                    <td th:text="${tempStudent.email}" />
+                    <td th:text="${tempStudent.dateOfBirth}" />
+                    <td th:text="${tempStudent.countryOfBirth}" />
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+        <h2>Table of Courses</h2>
+        <table class="table table-bordered table-striped">
+
+                <thead class="thead-dark">
+                <tr>
+                    <th>Course Name</th>
+                    <th>Course Description</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="tempCourse : ${courses}">
+                    <td th:text="${tempCourse.name}" />
+                    <td th:text="${tempCourse.description}" />
+
+                </tr>
+                </tbody>
+
+        </table>
+
+    </div>
+</body>
+
+</html>
