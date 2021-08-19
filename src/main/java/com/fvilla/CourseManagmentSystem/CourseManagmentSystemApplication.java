@@ -1,15 +1,11 @@
 package com.fvilla.CourseManagmentSystem;
 
-import com.fvilla.CourseManagmentSystem.entity.Course;
-import com.fvilla.CourseManagmentSystem.entity.Student;
 import com.fvilla.CourseManagmentSystem.repository.CourseRepository;
-import com.fvilla.CourseManagmentSystem.repository.StudentRepository;
+import com.fvilla.CourseManagmentSystem.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.time.LocalDate;
 
 
 @SpringBootApplication
@@ -20,7 +16,7 @@ public class CourseManagmentSystemApplication {
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner (StudentRepository studentRepository, CourseRepository courseRepository){
+	CommandLineRunner commandLineRunner (UserRepository userRepository, CourseRepository courseRepository){
 		return args -> {
 
 

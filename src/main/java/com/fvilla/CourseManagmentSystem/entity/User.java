@@ -1,18 +1,28 @@
 package com.fvilla.CourseManagmentSystem.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "student")
-public class Student {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "student_id")
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
+
 
     @Column(name = "first_name")
     private String firstName;
@@ -27,32 +37,35 @@ public class Student {
     private String email;
 
     @Column(name = "date_of_birth")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
     @Column(name = "country_of_birth")
     private String countryOfBirth;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "student_course",
-            joinColumns = @JoinColumn(name = "student_id"),
+            name = "users_courses",
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> courses = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 
-    public Student(){}
+    public User(){}
 
-    public Student(String firstName, String lastName, String gender, String email, LocalDate dateOfBirth, String countryOfBirth) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.email = email;
-        this.dateOfBirth = dateOfBirth;
-        this.countryOfBirth = countryOfBirth;
-    }
-
-    public Student(String firstName, String lastName, String gender, String email, LocalDate dateOfBirth,String countryOfBirth, List<Course> courses) {
+    public User(int id, String username, String password, String firstName, String lastName, String gender,
+                String email, LocalDate dateOfBirth, String countryOfBirth,
+                List<Course> courses, Collection<Role> roles) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -60,6 +73,7 @@ public class Student {
         this.dateOfBirth = dateOfBirth;
         this.countryOfBirth = countryOfBirth;
         this.courses = courses;
+        this.roles = roles;
     }
 
     public int getId() {
@@ -68,6 +82,22 @@ public class Student {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -126,10 +156,20 @@ public class Student {
         this.courses = courses;
     }
 
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public String toString() {
-        return "Student{" +
+        return "User{" +
                 "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", gender='" + gender + '\'' +
@@ -137,6 +177,7 @@ public class Student {
                 ", dateOfBirth=" + dateOfBirth +
                 ", countryOfBirth='" + countryOfBirth + '\'' +
                 ", courses=" + courses +
+                ", roles=" + roles +
                 '}';
     }
 }

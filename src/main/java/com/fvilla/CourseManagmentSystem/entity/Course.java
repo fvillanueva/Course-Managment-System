@@ -9,7 +9,7 @@ public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "course_id")
+    @Column(name = "id")
     private int id;
 
     @Column(name = "name")
@@ -19,7 +19,7 @@ public class Course {
     private String description;
 
     @ManyToMany(mappedBy = "courses")
-    private Set<Student> students;
+    private Set<User> users;
 
     public Course(String name, String description) {
         this.name = name;
@@ -35,10 +35,10 @@ public class Course {
         this.description = description;
     }
 
-    public Course(String name, String description, Set<Student> students) {
+    public Course(String name, String description, Set<User> users) {
         this.name = name;
         this.description = description;
-        this.students = students;
+        this.users = users;
     }
 
     public int getId() {
@@ -65,12 +65,12 @@ public class Course {
         this.description = description;
     }
 
-    public Set<Student> getStudents() {
-        return students;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setStudents(Set<Student> students) {
-        this.students = students;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Course {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", students=" + students +
+                ", users=" + users +
                 '}';
     }
 }

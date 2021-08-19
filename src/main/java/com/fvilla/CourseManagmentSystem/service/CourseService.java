@@ -21,4 +21,8 @@ public class CourseService {
     public List<Course> findAll() {
         return courseRepository.findAllByOrderByNameAsc();
     }
+
+    public void save(Course theCourse) {
+        courseRepository.save(theCourse);
+    }
 }

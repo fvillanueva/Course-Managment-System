@@ -1,43 +1,34 @@
 package com.fvilla.CourseManagmentSystem.Controller;
 
 import com.fvilla.CourseManagmentSystem.entity.Course;
-import com.fvilla.CourseManagmentSystem.entity.User;
 import com.fvilla.CourseManagmentSystem.service.CourseService;
-import com.fvilla.CourseManagmentSystem.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class HomeController {
+@RequestMapping("/course")
+public class CourseController {
 
-    private UserService userService;
     private CourseService courseService;
 
-    public HomeController(UserService userService, CourseService courseService) {
-        this.userService = userService;
+    public CourseController(CourseService courseService) {
         this.courseService = courseService;
+
     }
 
-    @GetMapping("/")
-    public String home(Model studentModel, Model courseModel){
+    @GetMapping("/showFormForAdd")
+    public String showFormForAdd(Model theModel) {
 
-        List<User> theStudents = userService.findAll();
+        Course theCourse = new Course();
 
-        studentModel.addAttribute("students", theStudents);
+        theModel.addAttribute("course", theCourse);
 
-        List<Course> theCourses = courseService.findAll();
-
-        courseModel.addAttribute("courses", theCourses);
-
-        return "home";
+        return "course-form";
     }
-
-
 
     @PostMapping("/save")
     public String saveCourse(@ModelAttribute("course") Course theCourse) {
@@ -46,5 +37,4 @@ public class HomeController {
 
         return "redirect:/";
     }
-
 }
