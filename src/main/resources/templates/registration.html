@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <title>Save Employee</title>
+</head>
+
+<body>
+
+<div class="container">
+
+
+    <div th:if="${param.success}">
+        <div class="alert alert-info"> You've successfully registered to our app!</div>
+    </div>
+
+
+    <p style="margin-bottom: 5px" class="h2 md-6 col-md-offset-3">Register User</p>
+    <div id="loginbox" style="margin-top: 30px"
+         class="col-md-6 col-md-offset-3">
+
+        <form th:action="@{/registration}"
+              th:object="${user}" method="POST"
+              class="form-horizontal">
+
+            <!-- User name -->
+            <div style="margin-bottom: 15px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input type="text" th:field="*{username}" placeholder="username (*)" class="form-control" />
+            </div>
+
+            <!-- Password -->
+            <div style="margin-bottom: 15px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input type="password" th:field="*{password}" placeholder="password (*)" class="form-control"/>
+            </div>
+
+
+            <!-- First name -->
+            <div style="margin-bottom: 15px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input type="text" th:field="*{firstName}" placeholder="first name (*)" class="form-control" />
+            </div>
+
+
+
+            <!-- Last name -->
+            <div style="margin-bottom: 15px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input type="text" th:field="*{lastName}" placeholder="last name (*)" class="form-control" />
+            </div>
+
+
+            <!-- Gender -->
+            <div style="margin-bottom: 15px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input type="text" th:field="*{gender}" placeholder="Gender (*)" class="form-control" />
+            </div>
+
+            <!-- Email -->
+            <div style="margin-bottom: 15px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                <input type="text" th:field="*{email}" placeholder="email (*)" class="form-control" />
+            </div>
+
+            <!-- Date of Birth -->
+            <div style="margin-bottom: 15px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <input type="text" th:field="*{dateOfBirth}" placeholder="Date of birth (*)" class="form-control" />
+            </div>
+
+            <!-- Country of Birth -->
+            <div style="margin-bottom: 15px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
+                <input type="text" th:field="*{countryOfBirth}" placeholder="Country of birth (*)" class="form-control" />
+            </div>
+
+            <!-- Register Button -->
+            <div style="margin-top: 30px" class="form-group">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <span>Already registered? <a href="/" th:href="@{/login}">Login here</a></span>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+
+</div>
+</body>
+
+</html>

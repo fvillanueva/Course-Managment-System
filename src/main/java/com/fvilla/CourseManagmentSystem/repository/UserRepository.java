@@ -11,4 +11,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     public List<User> findAllByOrderByLastNameAsc();
 
+    User findByUsername(String username);
 }

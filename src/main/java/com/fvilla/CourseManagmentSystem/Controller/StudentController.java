@@ -20,15 +20,6 @@ public class StudentController {
 
     }
 
-    @GetMapping("/showFormForAdd")
-    public String showFormForAdd(Model theModel) {
-
-        User theStudent = new User();
-
-        theModel.addAttribute("student", theStudent);
-
-        return "student-form";
-    }
 
     @PostMapping("/save")
     public String saveUser(@ModelAttribute("student") User theUser) {

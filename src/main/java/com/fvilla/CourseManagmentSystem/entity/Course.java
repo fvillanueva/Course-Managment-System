@@ -1,6 +1,7 @@
 package com.fvilla.CourseManagmentSystem.entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,7 +20,7 @@ public class Course {
     private String description;
 
     @ManyToMany(mappedBy = "courses")
-    private Set<User> users;
+    private List<User> users;
 
     public Course(String name, String description) {
         this.name = name;
@@ -35,7 +36,7 @@ public class Course {
         this.description = description;
     }
 
-    public Course(String name, String description, Set<User> users) {
+    public Course(String name, String description, List<User> users) {
         this.name = name;
         this.description = description;
         this.users = users;
@@ -65,11 +66,11 @@ public class Course {
         this.description = description;
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 

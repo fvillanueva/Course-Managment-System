@@ -4,25 +4,28 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "app_user", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
-    @Column(name = "username")
     private String username;
 
-    @Column(name = "password")
     private String password;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Collection<Role> roles;
 
     @Column(name = "first_name")
     private String firstName;
@@ -30,42 +33,32 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "gender")
     private String gender;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "date_of_birth")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Column(name = "country_of_birth")
     private String countryOfBirth;
 
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "users_courses",
+            name = "user_course",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private List<Course> courses = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    private Set<Course> courses;
 
     public User(){}
 
-    public User(int id, String username, String password, String firstName, String lastName, String gender,
-                String email, LocalDate dateOfBirth, String countryOfBirth,
-                List<Course> courses, Collection<Role> roles) {
-        this.id = id;
+    public User(String username, String password, Collection<Role> roles, String firstName, String lastName,
+                String gender, String email, LocalDate dateOfBirth, String countryOfBirth, Set<Course> courses) {
+        super();
         this.username = username;
         this.password = password;
+        this.roles = roles;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -73,7 +66,6 @@ public class User {
         this.dateOfBirth = dateOfBirth;
         this.countryOfBirth = countryOfBirth;
         this.courses = courses;
-        this.roles = roles;
     }
 
     public int getId() {
@@ -98,6 +90,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
     public String getFirstName() {
@@ -148,20 +148,12 @@ public class User {
         this.countryOfBirth = countryOfBirth;
     }
 
-    public List<Course> getCourses() {
+    public Set<Course> getCourses() {
         return courses;
     }
 
-    public void setCourses(List<Course> courses) {
+    public void setCourses(Set<Course> courses) {
         this.courses = courses;
-    }
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
     }
 
     @Override
@@ -170,6 +162,7 @@ public class User {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", roles=" + roles +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", gender='" + gender + '\'' +
@@ -177,7 +170,6 @@ public class User {
                 ", dateOfBirth=" + dateOfBirth +
                 ", countryOfBirth='" + countryOfBirth + '\'' +
                 ", courses=" + courses +
-                ", roles=" + roles +
                 '}';
     }
 }
