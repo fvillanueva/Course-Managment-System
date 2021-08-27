@@ -2,8 +2,8 @@ package com.fvilla.CourseManagmentSystem.service;
 
 import com.fvilla.CourseManagmentSystem.entity.Role;
 import com.fvilla.CourseManagmentSystem.entity.User;
+import com.fvilla.CourseManagmentSystem.repository.RoleDao;
 import com.fvilla.CourseManagmentSystem.repository.UserRepository;
-import com.fvilla.CourseManagmentSystem.security.dto.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,23 +14,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
 
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleDao roleDao;
+
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
 
     public List<User> findAll() {
@@ -38,29 +37,30 @@ public class UserService implements UserDetailsService {
     }
 
     public void save(User theUser) {
+
         userRepository.save(theUser);
     }
 
 
     // REGISTRATION
+    @Transactional
+    public User saveStudentRegistration (User userRegistration){
 
-    public User saveStudentRegistration (UserRegistrationDto registrationDto){
+        User user = new User();
 
-        User user = new User(registrationDto.getUsername(),
-                passwordEncoder.encode(registrationDto.getPassword()),
-                Arrays.asList(new Role("ROLE_STUDENT")),
-                registrationDto.getFirstName(),
-                registrationDto.getLastName(),
-                registrationDto.getGender(),
-                registrationDto.getEmail(),
-                registrationDto.getDateOfBirth(),
-                registrationDto.getCountryOfBirth(),
-                null);
+        user.setUsername(userRegistration.getUsername());
+        user.setPassword(passwordEncoder.encode(userRegistration.getPassword()));
+        user.setRoles(Arrays.asList(roleDao.findRoleByName("ROLE_STUDENT")));
+        user.setFirstName(userRegistration.getFirstName());
+        user.setLastName(userRegistration.getLastName());
+        user.setGender(userRegistration.getGender());
+        user.setEmail(userRegistration.getEmail());
+        user.setDateOfBirth(userRegistration.getDateOfBirth());
+        user.setCountryOfBirth(userRegistration.getCountryOfBirth());
 
         return userRepository.save(user);
     }
 
-    // USER DETAILS REQUIRED FOR SPRING SECURITY
 
     @Transactional
     public User findByUserName(String username) {

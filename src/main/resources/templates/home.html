@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
 
@@ -49,6 +50,13 @@
             </tbody>
         </table>
 
+        <div sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{student/showFormForAdd}"
+               class="btn btn-primary btn-sm mr-5 mb-3">
+                Add Student
+            </a>
+        </div>
+
 
         <br>
 
@@ -75,10 +83,22 @@
 
         </table>
 
-        <a th:href="@{course/showFormForAdd}"
-           class="btn btn-primary btn-sm mr-5 mb-3">
-            Add Course
-        </a>
+        <div sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{course/showFormForAdd}"
+               class="btn btn-primary btn-sm mr-5 mb-3">
+                Add Course
+            </a>
+        </div>
+
+        <br>
+
+        <div sec:authorize="hasRole('ADMIN')">
+            <h2>Admin section</h2>
+            <a th:href="@{course/showFormForAdd}"
+               class="btn btn-primary btn-sm mr-5 mb-3">
+                Add New Admin User
+            </a>
+        </div>
 
     </div>
 </body>

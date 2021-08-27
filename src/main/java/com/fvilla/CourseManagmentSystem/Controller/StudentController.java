@@ -1,5 +1,6 @@
 package com.fvilla.CourseManagmentSystem.Controller;
 
+import com.fvilla.CourseManagmentSystem.entity.Course;
 import com.fvilla.CourseManagmentSystem.entity.User;
 import com.fvilla.CourseManagmentSystem.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/students")
+@RequestMapping("/student")
 public class StudentController {
 
     private UserService userService;
@@ -20,11 +21,20 @@ public class StudentController {
 
     }
 
+    @GetMapping("/showFormForAdd")
+    public String showFormForAdd(Model theModel) {
+
+        User user = new User();
+
+        theModel.addAttribute("student", user);
+
+        return "student-form";
+    }
 
     @PostMapping("/save")
     public String saveUser(@ModelAttribute("student") User theUser) {
 
-        userService.save(theUser);
+        userService.saveStudentRegistration(theUser);
 
         return "redirect:/";
     }

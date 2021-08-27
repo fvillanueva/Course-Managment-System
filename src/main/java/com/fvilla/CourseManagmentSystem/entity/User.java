@@ -22,8 +22,8 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Collection<Role> roles;
 
@@ -54,6 +54,20 @@ public class User {
     public User(){}
 
     public User(String username, String password, Collection<Role> roles, String firstName, String lastName,
+                String gender, String email, LocalDate dateOfBirth, String countryOfBirth) {
+        super();
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.email = email;
+        this.dateOfBirth = dateOfBirth;
+        this.countryOfBirth = countryOfBirth;
+    }
+
+    public User(String username, String password, Collection<Role> roles, String firstName, String lastName,
                 String gender, String email, LocalDate dateOfBirth, String countryOfBirth, Set<Course> courses) {
         super();
         this.username = username;
@@ -67,6 +81,7 @@ public class User {
         this.countryOfBirth = countryOfBirth;
         this.courses = courses;
     }
+
 
     public int getId() {
         return id;

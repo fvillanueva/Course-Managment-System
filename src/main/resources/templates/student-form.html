@@ -20,7 +20,7 @@
 		
 		<p class="h4 mb-4">Save Student</p>
 	
-		<form th:action="@{/students/save}"
+		<form th:action="@{/student/save}"
 			  th:object="${student}" method="POST">
 
 			<input type="hidden" th:field="*{id}" />
