@@ -26,7 +26,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private RoleDao roleDao;
 
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -41,8 +40,6 @@ public class UserService implements UserDetailsService {
         userRepository.save(theUser);
     }
 
-
-    // REGISTRATION
     @Transactional
     public User saveStudentRegistration (User userRegistration){
 
@@ -61,13 +58,28 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-
     @Transactional
+    public User saveAdminRegistration(User theUser) {
+
+        User user = new User();
+
+        user.setUsername(theUser.getUsername());
+        user.setPassword(passwordEncoder.encode(theUser.getPassword()));
+        user.setRoles(Arrays.asList(roleDao.findRoleByName("ROLE_ADMIN")));
+        user.setFirstName(theUser.getFirstName());
+        user.setLastName(theUser.getLastName());
+        user.setGender(theUser.getGender());
+        user.setEmail(theUser.getEmail());
+        user.setDateOfBirth(theUser.getDateOfBirth());
+        user.setCountryOfBirth(theUser.getCountryOfBirth());
+
+        return userRepository.save(user);
+    }
+
     public User findByUserName(String username) {
 
         return userRepository.findByUsername(username);
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -84,5 +96,4 @@ public class UserService implements UserDetailsService {
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
-
 }

@@ -2,7 +2,6 @@ package com.fvilla.CourseManagmentSystem.entity;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "course")
@@ -19,13 +18,15 @@ public class Course {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "videoURL")
+    private String videoURL;
+
+    @Column(name = "video_explanation")
+    private String videoExplanation;
+
+
     @ManyToMany(mappedBy = "courses")
     private List<User> users;
-
-    public Course(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
 
     public Course() {
     }
@@ -34,12 +35,6 @@ public class Course {
         this.id = id;
         this.name = name;
         this.description = description;
-    }
-
-    public Course(String name, String description, List<User> users) {
-        this.name = name;
-        this.description = description;
-        this.users = users;
     }
 
     public int getId() {
@@ -72,6 +67,22 @@ public class Course {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public String getVideoExplanation() {
+        return videoExplanation;
+    }
+
+    public void setVideoExplanation(String videoExplanation) {
+        this.videoExplanation = videoExplanation;
+    }
+
+    public String getVideoURL() {
+        return videoURL;
+    }
+
+    public void setVideoURL(String videoURL) {
+        this.videoURL = videoURL;
     }
 
     @Override

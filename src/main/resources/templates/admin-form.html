@@ -8,20 +8,20 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-	<title>Save Student</title>
+	<title>Save New Admin</title>
 </head>
 
 <body>
 
 	<div class="container">
 	
-		<h3>Studet Directory</h3>
+		<h3>Admin Directory</h3>
 		<hr>
 		
-		<p class="h4 mb-4">Save Student</p>
+		<p class="h4 mb-4">Save Admin</p>
 	
-		<form th:action="@{/user/save}"
-			  th:object="${user}" method="POST">
+		<form th:action="@{/admin/save}"
+			  th:object="${admin}" method="POST">
 
 			<input type="hidden" th:field="*{id}" />
 

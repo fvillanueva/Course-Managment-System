@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+
+    <title>Course Page</title>
+</head>
+<body>
+
+<div th:object="${course}" class="text-center p-3">
+
+    <h1 th:text="${course.name}"></h1>
+
+    <br>
+
+    <p th:text="${course.videoExplanation}"></p>
+
+    <br>
+
+    <iframe width="620" height="415"
+            th:src="${course.videoURL}">
+    </iframe>
+
+    <br>
+
+    <a th:href="@{/}">Back to Home Page</a>
+
+</div>
+
+
+
+
+
+</body>
+</html>

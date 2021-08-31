@@ -4,10 +4,7 @@ import com.fvilla.CourseManagmentSystem.entity.Course;
 import com.fvilla.CourseManagmentSystem.service.CourseService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/course")
@@ -18,6 +15,16 @@ public class CourseController {
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
 
+    }
+
+    @GetMapping("/page")
+    public String showCoursePage(@RequestParam("courseId") int theId, Model theModel){
+
+        Course theCourse = courseService.findById(theId);
+
+        theModel.addAttribute("course", theCourse);
+
+        return "course-page";
     }
 
     @GetMapping("/showFormForAdd")
