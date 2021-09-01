@@ -7,7 +7,8 @@
 
     <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>Course Managment System</title>
 
@@ -21,10 +22,12 @@
 
         <br><br>
 
-        <h2>Table of Students</h2>
-        <table class="table table-bordered table-striped">
+        <div sec:authorize="hasRole('ADMIN')">
 
-            <thead class="thead-dark">
+            <h3>Table of Students</h3>
+            <table class="table table-bordered table-striped">
+
+                <thead class="thead-dark">
                 <tr>
                     <th>Id</th>
                     <th>First Name</th>
@@ -35,57 +38,87 @@
                     <th>Country of birth</th>
 
                 </tr>
-            </thead>
+                </thead>
 
-            <tbody>
+                <tbody>
                 <tr th:each="tempStudent : ${students}">
-                    <td th:text="${tempStudent.id}" />
-                    <td th:text="${tempStudent.firstName}" />
-                    <td th:text="${tempStudent.lastName}" />
-                    <td th:text="${tempStudent.gender}" />
-                    <td th:text="${tempStudent.email}" />
-                    <td th:text="${tempStudent.dateOfBirth}" />
-                    <td th:text="${tempStudent.countryOfBirth}" />
+                    <td th:text="${tempStudent.id}"/>
+                    <td th:text="${tempStudent.firstName}"/>
+                    <td th:text="${tempStudent.lastName}"/>
+                    <td th:text="${tempStudent.gender}"/>
+                    <td th:text="${tempStudent.email}"/>
+                    <td th:text="${tempStudent.dateOfBirth}"/>
+                    <td th:text="${tempStudent.countryOfBirth}"/>
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
-        <div sec:authorize="hasRole('ADMIN')">
+
             <a th:href="@{student/showFormForAdd}"
                class="btn btn-primary btn-sm mr-5 mb-3">
                 Add Student
             </a>
         </div>
 
+        <br>
+
+        <h3>Your Courses</h3>
+        <table class="table table-bordered table-striped">
+
+            <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
+
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="tempUserCourse : ${userCourses}">
+                <td th:text="${tempUserCourse.id}"/>
+                <td th:text="${tempUserCourse.name}"/>
+                <td th:text="${tempUserCourse.description}"/>
+                <td class="text-center">
+                    <a th:href="@{course/page(courseId=${tempUserCourse.id})}"
+                       class="btn btn-info btn-sm">
+                        Go to Course
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
 
         <br>
 
-        <h2>Table of Courses</h2>
+        <h3>Table of Courses</h3>
         <table class="table table-bordered table-striped">
 
-                <thead class="thead-dark">
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th></th>
+            <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
 
-                </tr>
-                </thead>
+            </tr>
+            </thead>
 
-                <tbody>
-                <tr th:each="tempCourse : ${courses}">
-                    <td th:text="${tempCourse.id}" />
-                    <td th:text="${tempCourse.name}" />
-                    <td th:text="${tempCourse.description}" />
-                    <td class="text-center">
-                        <a th:href="@{course/page(courseId=${tempCourse.id})}"
-                           class="btn btn-info btn-sm">
-                            Ir al curso
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
+            <tbody>
+            <tr th:each="tempCourse : ${courses}">
+                <td th:text="${tempCourse.id}"/>
+                <td th:text="${tempCourse.name}"/>
+                <td th:text="${tempCourse.description}"/>
+                <td class="text-center">
+                    <a th:href="@{course/buyCourse(courseId=${tempCourse.id})}"
+                       class="btn btn-info btn-sm">
+                        Get Course for free!
+                    </a>
+                </td>
+            </tr>
+            </tbody>
 
         </table>
 
@@ -94,19 +127,81 @@
                class="btn btn-primary btn-sm mr-5 mb-3">
                 Add Course
             </a>
-        </div>
 
-        <br>
 
-        <div sec:authorize="hasRole('ADMIN')">
-            <h2>Admin section</h2>
+            <br>
+
+            <h3>Table of Teachers</h3>
+            <table class="table table-bordered table-striped">
+
+                <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="tempTeacher : ${teachers}">
+                    <td th:text="${tempTeacher.id}"/>
+                    <td th:text="${tempTeacher.firstName}"/>
+                    <td th:text="${tempTeacher.lastName}"/>
+                    <td th:text="${tempTeacher.email}"/>
+
+                </tr>
+                </tbody>
+            </table>
+
+            <a th:href="@{teacher/showFormForAdd}"
+               class="btn btn-primary btn-sm mr-5 mb-3">
+                Add New Teacher
+            </a>
+
+            <br><br>
+
+
+            <h3>Table of Admins</h3>
+            <table class="table table-bordered table-striped">
+
+                <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Gender</th>
+                    <th>Email</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="tempAdmin : ${admins}">
+                    <td th:text="${tempAdmin.id}"/>
+                    <td th:text="${tempAdmin.firstName}"/>
+                    <td th:text="${tempAdmin.lastName}"/>
+                    <td th:text="${tempAdmin.gender}"/>
+                    <td th:text="${tempAdmin.email}"/>
+
+                </tr>
+                </tbody>
+            </table>
+
             <a th:href="@{admin/showFormForAdd}"
                class="btn btn-primary btn-sm mr-5 mb-3">
                 Add New Admin User
             </a>
+
         </div>
 
+        <form action="#" th:action="@{/logout}" method="POST">
+            <input type="submit" value="Logout" class="btn btn-outline-primary mt-2"/>
+        </form>
+
     </div>
+
 </body>
 
 </html>

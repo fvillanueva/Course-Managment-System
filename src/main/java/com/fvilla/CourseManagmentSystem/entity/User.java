@@ -171,6 +171,9 @@ public class User {
         this.courses = courses;
     }
 
+    public void addCourses(Course course) {
+        this.courses.add(course);
+    }
     @Override
     public String toString() {
         return "User{" +

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <title>Teacher form</title>
+</head>
+<body>
+<div class="container">
+
+    <h3>Admin Directory</h3>
+    <hr>
+
+    <p class="h4 mb-4">Save Admin</p>
+
+    <form th:action="@{/teacher/save}"
+          th:object="${user}" method="POST">
+
+        <input type="hidden" th:field="*{id}" />
+
+        <input type="text" th:field="*{username}"
+               class="form-control mb-4 col-4" placeholder="Username">
+
+        <input type="text" th:field="*{password}"
+               class="form-control mb-4 col-4" placeholder="Password">
+
+        <input type="text" th:field="*{firstName}"
+               class="form-control mb-4 col-4" placeholder="First name">
+
+        <input type="text" th:field="*{lastName}"
+               class="form-control mb-4 col-4" placeholder="Last name">
+
+        <input type="text" th:field="*{gender}"
+               class="form-control mb-4 col-4" placeholder="Gender">
+
+        <input type="text" th:field="*{email}"
+               class="form-control mb-4 col-4" placeholder="Email">
+
+        <input type="text" th:field="*{dateOfBirth}"
+               class="form-control mb-4 col-4" placeholder="Date of Birth: YYYY-MM-DD">
+
+        <input type="text" th:field="*{countryOfBirth}"
+               class="form-control mb-4 col-4" placeholder="Country of Birth">
+
+        <button type="submit" class="btn btn-info col-2">Save</button>
+
+    </form>
+
+    <hr>
+    <a th:href="@{/}">Back to Home Page</a>
+
+</div>
+</body>
+</html>

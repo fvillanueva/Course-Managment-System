@@ -11,31 +11,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/teacher")
+public class TeacherController {
 
-    @Autowired
+
     private UserService userService;
+
+    public TeacherController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/showFormForAdd")
     public String showFormForAdd(Model theModel) {
 
         User user = new User();
 
-        theModel.addAttribute("admin", user);
+        theModel.addAttribute("user", user);
 
-        return "admin-form";
+        return "teacher-form";
     }
 
     @PostMapping("/save")
-    public String saveUser(@ModelAttribute("admin") User theUser) {
+    public String saveTeacher(@ModelAttribute("teacher") User theUser) {
 
-        userService.saveAdminRegistration(theUser);
+        userService.saveTeacherRegistration(theUser);
 
         return "redirect:/";
     }
-
-
-
 
 }
