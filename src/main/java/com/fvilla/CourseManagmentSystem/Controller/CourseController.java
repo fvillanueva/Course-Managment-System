@@ -5,13 +5,11 @@ import com.fvilla.CourseManagmentSystem.entity.User;
 import com.fvilla.CourseManagmentSystem.service.CourseService;
 import com.fvilla.CourseManagmentSystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/course")
@@ -31,9 +29,21 @@ public class CourseController {
     @GetMapping("/buyCourse")
     public String buyCourse(@RequestParam("courseId") int theId){
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        userService.addCourseToStudent(theId);
 
-        userService.addCourseToStudent(theId, auth.getName());
+        return "redirect:/";
+    }
+
+    @RequestMapping("/getOne")
+    @ResponseBody
+    public Optional<Course> getOne(Integer Id) {
+        return courseService.getOne(Id);
+    }
+
+    @RequestMapping(value = "/addTeacher", method = {RequestMethod.GET, RequestMethod.PUT})
+    public String addTeacher(int idCourse, int teacherId){
+
+        userService.addTeacherToCourse(idCourse, teacherId);
 
         return "redirect:/";
     }
@@ -63,6 +73,12 @@ public class CourseController {
 
         courseService.save(theCourse);
 
+        return "redirect:/";
+    }
+
+    @GetMapping("/deleteCourse")
+    public String deleteAdmin(@RequestParam("courseId") int courseId){
+        courseService.deleteCourseById(courseId);
         return "redirect:/";
     }
 }

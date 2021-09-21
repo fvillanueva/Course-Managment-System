@@ -19,7 +19,7 @@ public class User {
 
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -44,7 +44,7 @@ public class User {
     @Column(name = "country_of_birth")
     private String countryOfBirth;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "user_course",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -167,13 +167,6 @@ public class User {
         return courses;
     }
 
-    public void setCourses(Set<Course> courses) {
-        this.courses = courses;
-    }
-
-    public void addCourses(Course course) {
-        this.courses.add(course);
-    }
     @Override
     public String toString() {
         return "User{" +

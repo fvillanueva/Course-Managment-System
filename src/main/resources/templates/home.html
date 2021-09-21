@@ -4,203 +4,280 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+     <script type="text/javascript" src="..stataic/main.js" th:src="@{/main.js}"></script>
 
     <title>Course Managment System</title>
-
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h1>Home - Course Managment System</h1>
+    <h1>Home - Course Managment System</h1>
 
-        <br><br>
+    <br><br>
 
-        <div sec:authorize="hasRole('ADMIN')">
+    <div sec:authorize="hasRole('ADMIN')">
 
-            <h3>Table of Students</h3>
-            <table class="table table-bordered table-striped">
-
-                <thead class="thead-dark">
-                <tr>
-                    <th>Id</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Gender</th>
-                    <th>Email</th>
-                    <th>Date of birth</th>
-                    <th>Country of birth</th>
-
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr th:each="tempStudent : ${students}">
-                    <td th:text="${tempStudent.id}"/>
-                    <td th:text="${tempStudent.firstName}"/>
-                    <td th:text="${tempStudent.lastName}"/>
-                    <td th:text="${tempStudent.gender}"/>
-                    <td th:text="${tempStudent.email}"/>
-                    <td th:text="${tempStudent.dateOfBirth}"/>
-                    <td th:text="${tempStudent.countryOfBirth}"/>
-                </tr>
-                </tbody>
-            </table>
-
-
-            <a th:href="@{student/showFormForAdd}"
-               class="btn btn-primary btn-sm mr-5 mb-3">
-                Add Student
-            </a>
-        </div>
-
-        <br>
-
-        <h3>Your Courses</h3>
+        <h3>Table of Students</h3>
         <table class="table table-bordered table-striped">
 
             <thead class="thead-dark">
             <tr>
                 <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Date of birth</th>
+                <th>Country of birth</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="tempStudent : ${students}">
+                <td th:text="${tempStudent.id}"/>
+                <td th:text="${tempStudent.firstName}"/>
+                <td th:text="${tempStudent.lastName}"/>
+                <td th:text="${tempStudent.gender}"/>
+                <td th:text="${tempStudent.email}"/>
+                <td th:text="${tempStudent.dateOfBirth}"/>
+                <td th:text="${tempStudent.countryOfBirth}"/>
+                <td class="text-center" style='white-space: nowrap'>
+                    <a th:href="@{student/deleteStudent(userId=${tempStudent.id})}"
+                       class="btn btn-danger btn-sm"
+                       onclick="if (!(confirm('Are you sure you want to delete this student?'))) return false">
+                        Delete Student
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <a th:href="@{student/showFormForAdd}"
+           class="btn btn-primary btn-sm mr-5 mb-3">
+            Add Student
+        </a>
+
+    </div>
+
+    <br>
+    <div sec:authorize="hasAnyRole('STUDENT', 'TEACHER')">
+        <h3>Your Courses</h3>
+        <table class="table table-bordered table-striped">
+
+            <thead class="thead-dark">
+            <tr>
                 <th>Name</th>
                 <th>Description</th>
-                <th></th>
+                <th>Action</th>
 
             </tr>
             </thead>
 
             <tbody>
             <tr th:each="tempUserCourse : ${userCourses}">
-                <td th:text="${tempUserCourse.id}"/>
                 <td th:text="${tempUserCourse.name}"/>
                 <td th:text="${tempUserCourse.description}"/>
-                <td class="text-center">
+                <td class="text-center" style='white-space: nowrap'>
                     <a th:href="@{course/page(courseId=${tempUserCourse.id})}"
                        class="btn btn-info btn-sm">
                         Go to Course
                     </a>
+                    <div sec:authorize="hasRole('STUDENT')">
+                        <a th:href="@{student/deleteCourseFromUser(courseId=${tempUserCourse.id})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="if (!(confirm('Are you sure you want to leave this course?'))) return false">
+                            Leave Course
+                        </a>
+                    </div>
                 </td>
             </tr>
             </tbody>
 
         </table>
+    </div>
 
-        <br>
-
+    <div sec:authorize="hasAnyRole('STUDENT', 'ADMIN')">
         <h3>Table of Courses</h3>
         <table class="table table-bordered table-striped">
 
             <thead class="thead-dark">
             <tr>
-                <th>Id</th>
+                <th sec:authorize="hasRole('ADMIN')">Id</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th></th>
-
             </tr>
             </thead>
 
             <tbody>
             <tr th:each="tempCourse : ${courses}">
-                <td th:text="${tempCourse.id}"/>
+                <td sec:authorize="hasRole('ADMIN')" th:text="${tempCourse.id}"/>
                 <td th:text="${tempCourse.name}"/>
                 <td th:text="${tempCourse.description}"/>
-                <td class="text-center">
-                    <a th:href="@{course/buyCourse(courseId=${tempCourse.id})}"
+                <td class="text-center" style='white-space: nowrap'>
+                    <a sec:authorize="hasRole('STUDENT')" th:href="@{course/buyCourse(courseId=${tempCourse.id})}"
                        class="btn btn-info btn-sm">
                         Get Course for free!
+                    </a>
+                    <div sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{course/page(courseId=${tempCourse.id})}"
+                           class="btn btn-info btn-sm">
+                            Course Page
+                        </a>
+                        <!-- Button trigger modal -->
+                        <a th:href="@{course/getOne(Id=${tempCourse.id})}" class="btn btn-primary btn-sm"
+                           id="modalTeacher">
+                            Add Teacher
+                        </a>
+                        <a th:href="@{course/deleteCourse(courseId=${tempCourse.id})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="if (!(confirm('Are you sure you want to delete this course?'))) return false">
+                            Delete Course
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{course/showFormForAdd}"
+           class="btn btn-primary btn-sm mr-5 mb-3">
+            Add Course
+        </a>
+
+        <br><br>
+
+        <h3>Table of Teachers</h3>
+        <table class="table table-bordered table-striped">
+
+            <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="tempTeacher : ${teachers}">
+                <td th:text="${tempTeacher.id}"/>
+                <td th:text="${tempTeacher.firstName}"/>
+                <td th:text="${tempTeacher.lastName}"/>
+                <td th:text="${tempTeacher.email}"/>
+                <td th:text="${tempTeacher.gender}"/>
+                <td class="text-center" style='white-space: nowrap'>
+                    <a th:href="@{teacher/deleteTeacher(userId=${tempTeacher.id})}"
+                       class="btn btn-danger btn-sm"
+                       onclick="if (!(confirm('Are you sure you want to delete this teacher?'))) return false">
+                        Delete Teacher
                     </a>
                 </td>
             </tr>
             </tbody>
-
         </table>
 
-        <div sec:authorize="hasRole('ADMIN')">
-            <a th:href="@{course/showFormForAdd}"
-               class="btn btn-primary btn-sm mr-5 mb-3">
-                Add Course
-            </a>
+        <a th:href="@{teacher/showFormForAdd}"
+           class="btn btn-primary btn-sm mr-5 mb-3">
+            Add New Teacher
+        </a>
+
+        <br><br>
 
 
-            <br>
+        <h3>Table of Admins</h3>
+        <table class="table table-bordered table-striped">
 
-            <h3>Table of Teachers</h3>
-            <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+            </thead>
 
-                <thead class="thead-dark">
-                <tr>
-                    <th>Id</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
+            <tbody>
+            <tr th:each="tempAdmin : ${admins}">
+                <td th:text="${tempAdmin.id}"/>
+                <td th:text="${tempAdmin.firstName}"/>
+                <td th:text="${tempAdmin.lastName}"/>
+                <td th:text="${tempAdmin.gender}"/>
+                <td th:text="${tempAdmin.email}"/>
+                <td class="text-center" style='white-space: nowrap'>
+                    <a th:href="@{admin/deleteAdmin(userId=${tempAdmin.id})}"
+                       class="btn btn-danger btn-sm"
+                       onclick="if (!(confirm('Are you sure you want to delete this admin?'))) return false">
+                        Delete Admin
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr th:each="tempTeacher : ${teachers}">
-                    <td th:text="${tempTeacher.id}"/>
-                    <td th:text="${tempTeacher.firstName}"/>
-                    <td th:text="${tempTeacher.lastName}"/>
-                    <td th:text="${tempTeacher.email}"/>
-
-                </tr>
-                </tbody>
-            </table>
-
-            <a th:href="@{teacher/showFormForAdd}"
-               class="btn btn-primary btn-sm mr-5 mb-3">
-                Add New Teacher
-            </a>
-
-            <br><br>
-
-
-            <h3>Table of Admins</h3>
-            <table class="table table-bordered table-striped">
-
-                <thead class="thead-dark">
-                <tr>
-                    <th>Id</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Gender</th>
-                    <th>Email</th>
-
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr th:each="tempAdmin : ${admins}">
-                    <td th:text="${tempAdmin.id}"/>
-                    <td th:text="${tempAdmin.firstName}"/>
-                    <td th:text="${tempAdmin.lastName}"/>
-                    <td th:text="${tempAdmin.gender}"/>
-                    <td th:text="${tempAdmin.email}"/>
-
-                </tr>
-                </tbody>
-            </table>
-
-            <a th:href="@{admin/showFormForAdd}"
-               class="btn btn-primary btn-sm mr-5 mb-3">
-                Add New Admin User
-            </a>
-
-        </div>
-
-        <form action="#" th:action="@{/logout}" method="POST">
-            <input type="submit" value="Logout" class="btn btn-outline-primary mt-2"/>
-        </form>
+        <a th:href="@{admin/showFormForAdd}"
+           class="btn btn-primary btn-sm mr-5 mb-3">
+            Add New Admin User
+        </a>
 
     </div>
+
+    <form action="#" th:action="@{/logout}" method="POST">
+        <input type="submit" value="Logout" class="btn btn-outline-primary mt-2"/>
+    </form>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addTeacherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <form th:action="@{course/addTeacher}" method="put">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" th:value="${idCourse}" class="form-control" id="idCourse" name="idCourse">
+                    Select a teacher: <select class="selectpicker" th:value="${teacherId}" name="teacherId"
+                                              id="ex-basic">
+                    <option th:each="teacher : ${teachers}"
+                            th:value="${teacher.id}"
+                            th:utext="${teacher.firstName + ' ' +teacher.lastName}"
+                    />
+                </select>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Teacher</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 </body>
 

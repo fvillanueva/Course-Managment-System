@@ -1,5 +1,7 @@
 package com.fvilla.CourseManagmentSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -24,8 +26,8 @@ public class Course {
     @Column(name = "video_explanation")
     private String videoExplanation;
 
-
-    @ManyToMany(mappedBy = "courses")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "courses", cascade = CascadeType.REMOVE)
     private List<User> users;
 
     public Course() {

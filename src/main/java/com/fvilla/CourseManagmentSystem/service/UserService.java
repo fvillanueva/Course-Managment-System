@@ -5,7 +5,9 @@ import com.fvilla.CourseManagmentSystem.entity.Role;
 import com.fvilla.CourseManagmentSystem.entity.User;
 import com.fvilla.CourseManagmentSystem.repository.CourseRepository;
 import com.fvilla.CourseManagmentSystem.repository.RoleDao;
+import com.fvilla.CourseManagmentSystem.repository.UserDao;
 import com.fvilla.CourseManagmentSystem.repository.UserRepository;
+import io.micrometer.core.instrument.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,6 +33,9 @@ public class UserService implements UserDetailsService {
     private CourseRepository courseRepository;
 
     @Autowired
+    private UserDao userDao;
+
+    @Autowired
     private RoleDao roleDao;
 
     @Autowired
@@ -43,47 +48,25 @@ public class UserService implements UserDetailsService {
     public List<User> findAllStudents(){
         List<User> students = new ArrayList<>();
         Role role = roleDao.findRoleByName("ROLE_STUDENT");
-
-        for (User user : userRepository.findAll()){
-
-            if(user.getRoles().contains(role) ){
-                students.add(user);
-            }
-        }
-
+        userRepository.findAll().stream().filter(n -> n.getRoles().contains(role)).forEach(u -> students.add(u));
         return students;
     }
 
     public List<User> findAllTeachers() {
         List<User> teachers = new ArrayList<>();
         Role role = roleDao.findRoleByName("ROLE_TEACHER");
-
-        for (User user : userRepository.findAll()){
-
-            if(user.getRoles().contains(role) ){
-                teachers.add(user);
-            }
-        }
-
+        userRepository.findAll().stream().filter(n -> n.getRoles().contains(role)).forEach(u -> teachers.add(u));
         return teachers;
     }
 
     public List<User> findAllAdmins() {
         List<User> admins = new ArrayList<>();
         Role role = roleDao.findRoleByName("ROLE_ADMIN");
-
-        for (User user : userRepository.findAll()){
-
-            if(user.getRoles().contains(role) ){
-                admins.add(user);
-            }
-        }
-
+        userRepository.findAll().stream().filter(n -> n.getRoles().contains(role)).forEach(u -> admins.add(u));
         return admins;
     }
 
     public void save(User theUser) {
-
         userRepository.save(theUser);
     }
 
@@ -141,19 +124,18 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User findByUserName(String username) {
+    @Transactional
+    public User findByUserName(String userName) {
 
-        return userRepository.findByUsername(username);
+        return userDao.findByUserName(userName);
     }
 
-    @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        User user = userRepository.findByUsername(username);
-
-        if(user == null)
+        User user = userDao.findByUserName(username);
+        if(user == null){
             throw new UsernameNotFoundException("Invalid username or password.");
-
+        }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 mapRolesToAuthorities(user.getRoles()));
     }
@@ -163,20 +145,31 @@ public class UserService implements UserDetailsService {
     }
 
     public Set<Course> findCoursesByUsername(String username) {
-
         User student = findByUserName(username);
         Set<Course> courses = student.getCourses();
-
         return courses;
     }
 
     @Transactional
-    public User addCourseToStudent (int courseId, String userUsername){
-
+    public void addCourseToStudent (int courseId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = this.findByUserName(auth.getName());
-        user.addCourses(courseRepository.getById(courseId));
+        userRepository.findByUsername(auth.getName()).getCourses().add(courseRepository.getById(courseId));
+    }
 
-        return user;
+    @Transactional
+    public void deleteCourseFromUser(int courseID) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+       userRepository.findByUsername(auth.getName()).getCourses().remove(courseRepository.getById(courseID));
+    }
+
+    @Transactional
+    public void addTeacherToCourse (int courseId, int teacherId){
+        User teacher = userRepository.findById(teacherId).orElseThrow();
+        teacher.getCourses().add(courseRepository.getById(courseId));
+    }
+
+    @Transactional
+    public void deleteUserById(int userId) {
+        userRepository.deleteById(userId);
     }
 }

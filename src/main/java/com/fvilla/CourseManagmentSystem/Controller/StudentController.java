@@ -3,12 +3,11 @@ package com.fvilla.CourseManagmentSystem.Controller;
 import com.fvilla.CourseManagmentSystem.entity.Course;
 import com.fvilla.CourseManagmentSystem.entity.User;
 import com.fvilla.CourseManagmentSystem.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/student")
@@ -38,6 +37,19 @@ public class StudentController {
         return "redirect:/";
     }
 
+    @GetMapping("/deleteStudent")
+    public String deleteStudent(@RequestParam("userId") int userId){
+       userService.deleteUserById(userId);
+        return "redirect:/";
+    }
+
+    @GetMapping("/deleteCourseFromUser")
+    public String deleteCourseFromUser(@RequestParam("courseId") int courseId){
+
+        userService.deleteCourseFromUser(courseId);
+
+        return "redirect:/";
+    }
 
 
 
