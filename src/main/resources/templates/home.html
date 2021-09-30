@@ -87,7 +87,7 @@
                 <td th:text="${tempUserCourse.name}"/>
                 <td th:text="${tempUserCourse.description}"/>
                 <td class="text-center" style='white-space: nowrap'>
-                    <a th:href="@{course/page(courseId=${tempUserCourse.id})}"
+                    <a th:href="@{course/{id}(id = ${tempUserCourse.id})}"
                        class="btn btn-info btn-sm">
                         Go to Course
                     </a>
@@ -129,7 +129,7 @@
                         Get Course for free!
                     </a>
                     <div sec:authorize="hasRole('ADMIN')">
-                        <a th:href="@{course/page(courseId=${tempCourse.id})}"
+                        <a th:href="@{course/{id}(id = ${tempCourse.id})}"
                            class="btn btn-info btn-sm">
                             Course Page
                         </a>
@@ -249,7 +249,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title </h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add Teacher </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

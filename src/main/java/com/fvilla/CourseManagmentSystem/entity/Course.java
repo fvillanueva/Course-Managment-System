@@ -1,7 +1,5 @@
 package com.fvilla.CourseManagmentSystem.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -26,9 +24,12 @@ public class Course {
     @Column(name = "video_explanation")
     private String videoExplanation;
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "courses", cascade = CascadeType.REMOVE)
     private List<User> users;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="course_id")
+    private List<Comment> comments;
 
     public Course() {
     }
@@ -85,6 +86,14 @@ public class Course {
 
     public void setVideoURL(String videoURL) {
         this.videoURL = videoURL;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override

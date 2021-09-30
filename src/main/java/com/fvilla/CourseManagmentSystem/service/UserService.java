@@ -126,7 +126,6 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User findByUserName(String userName) {
-
         return userDao.findByUserName(userName);
     }
 

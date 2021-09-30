@@ -1,7 +1,6 @@
 package com.fvilla.CourseManagmentSystem.Controller;
 
 import com.fvilla.CourseManagmentSystem.entity.Course;
-import com.fvilla.CourseManagmentSystem.entity.User;
 import com.fvilla.CourseManagmentSystem.service.CourseService;
 import com.fvilla.CourseManagmentSystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,7 @@ public class CourseController {
 
     @GetMapping("/buyCourse")
     public String buyCourse(@RequestParam("courseId") int theId){
-
         userService.addCourseToStudent(theId);
-
         return "redirect:/";
     }
 
@@ -42,43 +39,57 @@ public class CourseController {
 
     @RequestMapping(value = "/addTeacher", method = {RequestMethod.GET, RequestMethod.PUT})
     public String addTeacher(int idCourse, int teacherId){
-
         userService.addTeacherToCourse(idCourse, teacherId);
-
         return "redirect:/";
     }
 
-    @GetMapping("/page")
-    public String showCoursePage(@RequestParam("courseId") int theId, Model theModel){
-
-        Course theCourse = courseService.findById(theId);
-
+    @GetMapping("/{courseId}")
+    public String showCoursePage(@PathVariable("courseId") int courseId, Model theModel){
+        Course theCourse = courseService.findById(courseId);
         theModel.addAttribute("course", theCourse);
-
         return "course-page";
     }
 
     @GetMapping("/showFormForAdd")
     public String showFormForAdd(Model theModel) {
-
         Course theCourse = new Course();
-
         theModel.addAttribute("course", theCourse);
-
         return "course-form";
     }
 
     @PostMapping("/save")
     public String saveCourse(@ModelAttribute("course") Course theCourse) {
-
         courseService.save(theCourse);
-
         return "redirect:/";
     }
 
     @GetMapping("/deleteCourse")
-    public String deleteAdmin(@RequestParam("courseId") int courseId){
+    public String deleteCourse(@RequestParam("courseId") int courseId){
         courseService.deleteCourseById(courseId);
         return "redirect:/";
+    }
+
+    @PostMapping("/{id}/addComment")
+    public String addComment(@PathVariable int id, @ModelAttribute("addedComment") String addedComment){
+        courseService.addCommentToCourse(id, addedComment);
+        return "redirect:/course/"+id;
+    }
+
+    @GetMapping("/{courseId}/deleteComment")
+    public String deleteComment(@PathVariable int courseId, @RequestParam("commentId") int commentId){
+        courseService.deleteCommentFromCourse(courseId, commentId);
+        return "redirect:/course/"+courseId;
+    }
+
+    @GetMapping("/{courseId}/deleteReply")
+    public String deleteReply(@PathVariable int courseId, @RequestParam("commentId") int commentId, @RequestParam("replyId") int replyId){
+        courseService.deleteReplyFromComment(courseId, commentId, replyId);
+        return "redirect:/course/"+courseId;
+    }
+
+    @PostMapping(value = "/{courseId}/addReply")
+    public String addReply(@PathVariable int courseId, @RequestParam("commentId") int commentId, @ModelAttribute("reply") String reply){
+        courseService.replyComment(courseId, commentId, reply);
+        return "redirect:/course/"+courseId;
     }
 }

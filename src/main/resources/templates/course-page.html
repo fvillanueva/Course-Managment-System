@@ -1,39 +1,115 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Course Page</title>
 </head>
 <body>
+<div class="container">
+    <div th:object="${course}">
+        <div class="text-center p-3">
+            <h1 th:text="${course.name}"></h1>
 
-<div th:object="${course}" class="text-center p-3">
+            <br>
 
-    <h1 th:text="${course.name}"></h1>
+            <p th:text="${course.videoExplanation}"></p>
 
-    <br>
+            <br>
 
-    <p th:text="${course.videoExplanation}"></p>
+            <iframe width="620" height="415"
+                    th:src="${course.videoURL}">
+            </iframe>
+        </div>
+        <hr>
 
-    <br>
+        <h3>Comment Section</h3>
 
-    <iframe width="620" height="415"
-            th:src="${course.videoURL}">
-    </iframe>
+        <form th:action="@{'/course/' + ${course.id} + '/addComment'}" th:object="${addedComment}" method="POST">
+            <div>
+                <input type="text" style="width:300px; line-height: 32px;  vertical-align: middle"
+                       placeholder="Add comment" name="addedComment">
+                <button class="btn btn-primary" style="margin-left: 5px;  vertical-align: middle" type="submit">
+                    Publish
+                </button>
+            </div>
+        </form>
 
-    <br>
+        <div th:each="comment : ${course.comments}">
+            <div class="d-flex flex-row">
+                <div class="p-2"><img
+                        src="https://cdna.artstation.com/p/assets/images/images/009/546/058/medium/ivan-de-la-rosa-robot-toyface.jpg?1519605521"
+                        alt="user" width="50" class="rounded-circle"></div>
+                <div class="w-100">
+                    <br>
+                    <div class="fw-bold" style="float:left;" th:text="${comment.author}"></div>
+                    <div class="text-muted" style="float:right;" th:text="${comment.date}"></div>
+                    <br>
+                    <div class="d-block" style="margin-bottom: 15px" th:text="${comment.comment}"></div>
+                    <form id="replyForm"
+                          th:action="@{'/course/' + ${course.id} + '/addReply'(commentId = ${comment.id})}"
+                          th:object="${reply}" method="post" style="display:none; margin-bottom:20px;">
+                        <input type="text" style="width:300px; line-height: 32px;  vertical-align: middle"
+                               placeholder="Add reply" name="reply">
+                        <button class="btn btn-primary btn-sm" style="margin-left: 5px;  vertical-align: middle"
+                                type="submit">Reply
+                        </button>
+                        <a href="#" onClick="document.getElementById('replyForm').style.display='none';"
+                           class="btn btn-danger btn-sm">Close</a>
+                    </form>
 
-    <a th:href="@{/}">Back to Home Page</a>
+                    <a href="#" class="btn btn-info btn-sm"
+                       onClick="document.getElementById('replyForm').style.display='';">Reply</a>
 
+                    <a sec:authorize="hasRole('ADMIN')"
+                       th:href="@{'/course/' + ${course.id} + '/deleteComment'(commentId = ${comment.id})}"
+                       class="btn btn-danger btn-sm"
+                       onclick="if (!(confirm('Are you sure you want to delete this comment?'))) return false">
+                        Delete
+                    </a>
+                </div>
+            </div>
+            <div th:each="reply : ${comment.children}">
+                <div class="d-flex flex-row" style="margin-left:60px;">
+
+                    <div class="p-2"><img
+                            src="https://cdna.artstation.com/p/assets/images/images/009/546/058/medium/ivan-de-la-rosa-robot-toyface.jpg?1519605521"
+                            alt="user" width="50" class="rounded-circle"></div>
+                    <div class="w-100">
+                        <br>
+                        <div class="fw-bold" style="float:left;" th:text="${reply.author}"></div>
+                        <div class="text-muted" style="float:right;" th:text="${reply.date}"></div>
+                        <br>
+                        <div class="d-block" style="margin-bottom: 15px" th:text="${reply.comment}"></div>
+<!--                        <a type="button" class="btn btn-info btn-sm">Reply</a>-->
+                        <a sec:authorize="hasRole('ADMIN')"
+                           th:href="@{'/course/' + ${course.id} + '/deleteReply'(commentId = ${comment.id}, replyId = ${reply.id})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="if (!(confirm('Are you sure you want to delete this comment?'))) return false">
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a th:href="@{/}">Back to Home Page</a>
+
+    </div>
 </div>
 
-
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 
 
 </body>
