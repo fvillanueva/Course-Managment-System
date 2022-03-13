@@ -1,6 +1,7 @@
 package com.fvilla.CourseManagmentSystem.service;
 
 import com.fvilla.CourseManagmentSystem.entity.Comment;
+import com.fvilla.CourseManagmentSystem.entity.Content;
 import com.fvilla.CourseManagmentSystem.entity.Course;
 import com.fvilla.CourseManagmentSystem.repository.CourseRepository;
 import com.fvilla.CourseManagmentSystem.repository.UserRepository;
@@ -10,10 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 public class CourseService {
@@ -99,5 +98,14 @@ public class CourseService {
         Comment comment = course.get().getComments().stream().filter(n -> n.getId() == commentId).findAny().get();
         Comment reply = comment.getChildren().stream().filter(c -> c.getId() == replyId).findAny().get();
         comment.getChildren().remove(reply);
+    }
+
+    @Transactional
+    public void addVideoToCourse(Content video, int id) {
+        Course course = courseRepository.findById(id).get();
+        List<Content> videos = course.getVideos();
+        Content videoAux = new Content(video.getName(),video.getVideoURL(), video.getVideoExplanation());
+        videos.add(videoAux);
+        courseRepository.save(course);
     }
 }

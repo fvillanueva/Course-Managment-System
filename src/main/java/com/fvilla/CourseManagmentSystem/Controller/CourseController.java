@@ -1,5 +1,6 @@
 package com.fvilla.CourseManagmentSystem.Controller;
 
+import com.fvilla.CourseManagmentSystem.entity.Content;
 import com.fvilla.CourseManagmentSystem.entity.Course;
 import com.fvilla.CourseManagmentSystem.service.CourseService;
 import com.fvilla.CourseManagmentSystem.service.UserService;
@@ -51,9 +52,10 @@ public class CourseController {
     }
 
     @GetMapping("/showFormForAdd")
-    public String showFormForAdd(Model theModel) {
+    public String showFormForAdd(Model courseModel) {
         Course theCourse = new Course();
-        theModel.addAttribute("course", theCourse);
+        courseModel.addAttribute("course", theCourse);
+
         return "course-form";
     }
 
@@ -67,6 +69,20 @@ public class CourseController {
     public String deleteCourse(@RequestParam("courseId") int courseId){
         courseService.deleteCourseById(courseId);
         return "redirect:/";
+    }
+
+    @GetMapping("/{id}/addVideo")
+    public String addVideo(@PathVariable int id, Model videoModel){
+        Content video = new Content();
+        videoModel.addAttribute("video", video);
+        return "video-form";
+    }
+
+    @PostMapping("/{id}/addVideo/save")
+    public String saveVideo(@PathVariable int id, @ModelAttribute("video")Content video){
+        System.out.println(video);
+        courseService.addVideoToCourse(video, id);
+        return "redirect:/course/"+id;
     }
 
     @PostMapping("/{id}/addComment")

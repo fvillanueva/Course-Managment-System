@@ -7,7 +7,6 @@ import com.fvilla.CourseManagmentSystem.repository.CourseRepository;
 import com.fvilla.CourseManagmentSystem.repository.RoleDao;
 import com.fvilla.CourseManagmentSystem.repository.UserDao;
 import com.fvilla.CourseManagmentSystem.repository.UserRepository;
-import io.micrometer.core.instrument.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

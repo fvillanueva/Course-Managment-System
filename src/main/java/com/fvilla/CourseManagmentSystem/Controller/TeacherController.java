@@ -2,7 +2,6 @@ package com.fvilla.CourseManagmentSystem.Controller;
 
 import com.fvilla.CourseManagmentSystem.entity.User;
 import com.fvilla.CourseManagmentSystem.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

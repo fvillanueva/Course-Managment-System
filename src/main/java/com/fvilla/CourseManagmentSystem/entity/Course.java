@@ -1,5 +1,8 @@
 package com.fvilla.CourseManagmentSystem.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -18,26 +21,28 @@ public class Course {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "videoURL")
-    private String videoURL;
-
-    @Column(name = "video_explanation")
-    private String videoExplanation;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="course_id")
+    @OrderBy("id")
+    private List<Content> videos;
 
     @ManyToMany(mappedBy = "courses", cascade = CascadeType.REMOVE)
     private List<User> users;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name="course_id")
     private List<Comment> comments;
 
     public Course() {
     }
 
-    public Course(int id, String name, String description) {
-        this.id = id;
+    public Course(String name, String description, List<Content> videos, List<User> users, List<Comment> comments) {
         this.name = name;
         this.description = description;
+        this.videos = videos;
+        this.users = users;
+        this.comments = comments;
     }
 
     public int getId() {
@@ -72,20 +77,12 @@ public class Course {
         this.users = users;
     }
 
-    public String getVideoExplanation() {
-        return videoExplanation;
+    public List<Content> getVideos() {
+        return videos;
     }
 
-    public void setVideoExplanation(String videoExplanation) {
-        this.videoExplanation = videoExplanation;
-    }
-
-    public String getVideoURL() {
-        return videoURL;
-    }
-
-    public void setVideoURL(String videoURL) {
-        this.videoURL = videoURL;
+    public void setVideos(List<Content> videos) {
+        this.videos = videos;
     }
 
     public List<Comment> getComments() {
@@ -102,7 +99,9 @@ public class Course {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", videos=" + videos +
                 ", users=" + users +
+                ", comments=" + comments +
                 '}';
     }
 }

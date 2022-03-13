@@ -6,6 +6,11 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Font Awesone link-->
+    <script src="https://kit.fontawesome.com/a682ac3503.js" crossorigin="anonymous"></script>
+
+    <!-- JQuery link-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Course Page</title>
@@ -15,22 +20,61 @@
     <div th:object="${course}">
         <div class="text-center p-3">
             <h1 th:text="${course.name}"></h1>
+            <h3 th:text="${course.description}"></h3>
 
-            <br>
+            <hr>
 
-            <p th:text="${course.videoExplanation}"></p>
 
-            <br>
 
-            <iframe width="620" height="415"
-                    th:src="${course.videoURL}">
-            </iframe>
+            <div th:each="video : ${course.videos}">
+                <div class="w-100" style="border:1px solid black; margin-buttom:10px;padding:10px;" th:attr="onclick=|myFunction('${video.id}', 'arrow'+'${video.id}')|" >
+                    <div style="margin:auto;">
+                        <i th:id="'arrow' + ${video.id}" class="fas fa-chevron-down fa-lg" style="float:left;margin-top:6px"></i>
+                        <h5 th:text="${video.name}" style="display:inline;"></h5>
+                    </div>
+                </div>
+                <br>
+                <div th:id="${video.id}" style="display:none;">
+                    <p th:text="${video.videoExplanation}"></p>
+
+                    <iframe width="420" height="315"
+                            th:src="${video.videoURL}">
+                    </iframe>
+
+                </div>
+            </div>
+
+            <a th:href="@{'/course/' + ${course.id} + '/addVideo'}"
+               class="btn btn-primary btn-sm mr-5 mb-3">
+                Add New Video
+            </a>
+
+
+            <script>
+                function myFunction(id, arrow) {
+                  var x = document.getElementById(id);
+                  if (x.style.display === "none") {
+                    x.style.display = "block";
+                  } else {
+                    x.style.display = "none";
+                  }
+
+                    console.log(arrow);
+
+                  if(document.getElementById(arrow).className == "fas fa-chevron-down fa-lg"){
+                        document.getElementById(arrow).className = "fas fa-chevron-up fa-lg";
+                  } else {
+                        document.getElementById(arrow).className = "fas fa-chevron-down fa-lg";
+                  }
+                }
+        </script>
+
         </div>
         <hr>
 
         <h3>Comment Section</h3>
 
-        <form th:action="@{'/course/' + ${course.id} + '/addComment'}" th:object="${addedComment}" method="POST">
+        <form th:action="@{'/course/' + ${course.id} + '/addComment'}" th:object="${addedComment}" method="POST" autocomplete="off">
             <div>
                 <input type="text" style="width:300px; line-height: 32px;  vertical-align: middle"
                        placeholder="Add comment" name="addedComment">
@@ -51,7 +95,7 @@
                     <div class="text-muted" style="float:right;" th:text="${comment.date}"></div>
                     <br>
                     <div class="d-block" style="margin-bottom: 15px" th:text="${comment.comment}"></div>
-                    <form id="replyForm"
+                    <form id="replyForm" autocomplete="off"
                           th:action="@{'/course/' + ${course.id} + '/addReply'(commentId = ${comment.id})}"
                           th:object="${reply}" method="post" style="display:none; margin-bottom:20px;">
                         <input type="text" style="width:300px; line-height: 32px;  vertical-align: middle"
@@ -97,6 +141,8 @@
                 </div>
             </div>
         </div>
+
+        <br>
 
         <a th:href="@{/}">Back to Home Page</a>
 
