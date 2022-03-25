@@ -8,7 +8,6 @@ import com.fvilla.CourseManagmentSystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,16 +16,15 @@ import java.util.Optional;
 @Service
 public class CourseService {
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private CourseRepository courseRepository;
 
-    public CourseService(CourseRepository courseRepository) {
+    @Autowired
+    public CourseService(UserRepository userRepository, CourseRepository courseRepository) {
+        this.userRepository = userRepository;
         this.courseRepository = courseRepository;
     }
-
 
     public List<Course> findAll() {
         return courseRepository.findAllByOrderByNameAsc();
@@ -39,7 +37,7 @@ public class CourseService {
     public Course findById(int id){
         Optional<Course> result = courseRepository.findById(id);
 
-        Course course = null;
+        Course course;
 
         if(result.isPresent()){
             course = result.get();
@@ -50,15 +48,12 @@ public class CourseService {
         return course;
     }
 
-    public Optional<Course> getOne(Integer id) { return courseRepository.findById(id);
-    }
+    public Optional<Course> getOne(Integer id) { return courseRepository.findById(id);}
 
-    @Transactional
     public void deleteCourseById(int courseId) {
         courseRepository.deleteById(courseId);
     }
 
-    @Transactional
     public void addCommentToCourse(int courseId, String comment) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Comment auxComment = new Comment(
@@ -71,7 +66,6 @@ public class CourseService {
         courseRepository.save(auxCourse);
     }
 
-    @Transactional
     public void deleteCommentFromCourse(int courseId, int commentId) {
         Optional<Course> course = courseRepository.findById(courseId);
         Comment comment = course.get().getComments().stream().filter(n -> n.getId() == commentId).findAny().get();
@@ -79,7 +73,6 @@ public class CourseService {
         courseRepository.save(course.get());
     }
 
-    @Transactional
     public void replyComment(int courseId, int commentId, String reply) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Comment auxComment = new Comment(
@@ -92,7 +85,6 @@ public class CourseService {
         comment.getChildren().add(auxComment);
     }
 
-    @Transactional
     public void deleteReplyFromComment(int courseId, int commentId, int replyId) {
         Optional<Course> course = courseRepository.findById(courseId);
         Comment comment = course.get().getComments().stream().filter(n -> n.getId() == commentId).findAny().get();
@@ -100,7 +92,6 @@ public class CourseService {
         comment.getChildren().remove(reply);
     }
 
-    @Transactional
     public void addVideoToCourse(Content video, int id) {
         Course course = courseRepository.findById(id).get();
         List<Content> videos = course.getVideos();

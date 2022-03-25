@@ -1,5 +1,6 @@
 package com.fvilla.CourseManagmentSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @JsonIgnore
     private Collection<Role> roles;
 
     @Column(name = "first_name")
@@ -48,7 +50,9 @@ public class User {
     @JoinTable(
             name = "user_course",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    @JsonIgnore
     private Set<Course> courses;
 
     public User(){}

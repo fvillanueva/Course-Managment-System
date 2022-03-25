@@ -1,5 +1,6 @@
 package com.fvilla.CourseManagmentSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -27,6 +28,7 @@ public class Course {
     private List<Content> videos;
 
     @ManyToMany(mappedBy = "courses", cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<User> users;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -34,7 +36,17 @@ public class Course {
     @JoinColumn(name="course_id")
     private List<Comment> comments;
 
-    public Course() {
+    public Course() {}
+
+    public Course(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public Course(int id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
     }
 
     public Course(String name, String description, List<Content> videos, List<User> users, List<Comment> comments) {
