@@ -4,7 +4,6 @@ import com.fvilla.CourseManagmentSystem.entity.Course;
 import com.fvilla.CourseManagmentSystem.repository.CourseRepository;
 import com.fvilla.CourseManagmentSystem.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -39,7 +38,7 @@ class CourseServiceTest {
     }
 
     @Test
-    void save() {
+    void itShouldSave() {
         //given
         Course course = new Course("name", "description");
 
@@ -57,8 +56,7 @@ class CourseServiceTest {
     }
 
     @Test
-    @Disabled
-    void findById() {
+    void itShouldFindById() {
        //given
         when(courseRepository.findById(1)).thenReturn(Optional.of(new Course(1, "name", "description")));
 
@@ -72,37 +70,15 @@ class CourseServiceTest {
     }
 
     @Test
-    @Disabled
-    void getOne() {
+    void itShouldDeleteCourseById() {
+        //given
+        when(courseRepository.findById(1)).thenReturn(Optional.of(new Course(1, "name", "description")));
+
+         //when
+        underTest.deleteCourseById(1);
+
+        //then
+        assertThat(underTest.findById(1).equals(null));
     }
 
-    @Test
-    @Disabled
-    void deleteCourseById() {
-    }
-
-    @Test
-    @Disabled
-    void addCommentToCourse() {
-    }
-
-    @Test
-    @Disabled
-    void deleteCommentFromCourse() {
-    }
-
-    @Test
-    @Disabled
-    void replyComment() {
-    }
-
-    @Test
-    @Disabled
-    void deleteReplyFromComment() {
-    }
-
-    @Test
-    @Disabled
-    void addVideoToCourse() {
-    }
 }

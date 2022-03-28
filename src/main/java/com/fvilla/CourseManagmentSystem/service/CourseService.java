@@ -48,8 +48,6 @@ public class CourseService {
         return course;
     }
 
-    public Optional<Course> getOne(Integer id) { return courseRepository.findById(id);}
-
     public void deleteCourseById(int courseId) {
         courseRepository.deleteById(courseId);
     }

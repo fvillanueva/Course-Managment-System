@@ -40,10 +40,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     public List<User> findAllStudents(){
         List<User> students = new ArrayList<>();
         Role role = roleDao.findRoleByName("ROLE_STUDENT");

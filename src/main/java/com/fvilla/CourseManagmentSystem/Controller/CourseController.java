@@ -32,12 +32,6 @@ public class CourseController {
         return "redirect:/";
     }
 
-    @RequestMapping("/getOne")
-    @ResponseBody
-    public Optional<Course> getOne(Integer Id) {
-        return courseService.getOne(Id);
-    }
-
     @RequestMapping(value = "/addTeacher", method = {RequestMethod.GET, RequestMethod.PUT})
     public String addTeacher(int idCourse, int teacherId){
         userService.addTeacherToCourse(idCourse, teacherId);
